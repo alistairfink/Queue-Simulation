@@ -10,6 +10,7 @@
 using namespace std;
 
 float x_func(float u, float lamda){
+	// Compute the Inverse of the exponential cumulatice distribution function
 	float k = -1.0/lamda;
 	return k*log(1-u);
 }
@@ -18,6 +19,7 @@ vector<float> generator(float lambda, int events) {
     srand(time(0)); 
     vector<float> result;
     for(int counter = 0; counter < events; counter++) {
+		// Generate random number and pass that and lambda into x_func to get x. Push x to vector.
         float rndNum = rand() / ((double) RAND_MAX);
         float num = x_func(rndNum, lambda);
         result.push_back(num);
@@ -25,18 +27,3 @@ vector<float> generator(float lambda, int events) {
 
     return result;
 }
-
-// int main(){
-
-// 	float x = 0.2;
-
-// 	float ans =0;
-// 	float lamda = 1/75;
-
-
-// 	ans = x_func(x,lamda);
-
-// 	cout<< ans<<endl;
-
-// 	return 0;
-// }
