@@ -1,9 +1,9 @@
-#ifndef _LAMDA_FUNCT
-#define _LAMDA_FUNCT
-
 #include <math.h>
 #include<cstdlib>
+#include<vector>
+#include<>
+
+
 
 float x_func(float u, float lamda);
-
-#endif
+vector<float> generator(float lambda, int events) ;

@@ -14,14 +14,3 @@ int main() {
     return -1;
 }
 
-vector<float> generator(float lambda, int events) {
-    srand(time(0)); 
-    vector<float> result;
-    for(int counter = 0; counter < events; counter++) {
-        float rndNum = rand() / ((double) RAND_MAX);
-        float num = x_func(rndNum, lambda);
-        result.push_back(num);
-    }
-
-    return result;
-}
