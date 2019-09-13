@@ -7,10 +7,11 @@
 
 using namespace std;
 
-
-
 int main() {
-    generator(0.0, 10);
+    vector<float> result = generator(75, 1000);
+    for(std::size_t i=0; i<result.size(); ++i) {
+        cout << result[i] << endl;
+    }
+
     return -1;
 }
-

@@ -1,7 +1,7 @@
 #include <math.h>
-#include<cstdlib>
-#include<vector>
-#include<iostream>
+#include <cstdlib>
+#include <vector>
+#include <iostream>
 #include <random>
 #include <time.h>
 
@@ -26,17 +26,17 @@ vector<float> generator(float lambda, int events) {
     return result;
 }
 
-int main(){
+// int main(){
 
-	float x = 0.2;
+// 	float x = 0.2;
 
-	float ans =0;
-	float lamda = 1/75;
+// 	float ans =0;
+// 	float lamda = 1/75;
 
 
-	ans = x_func(x,lamda);
+// 	ans = x_func(x,lamda);
 
-	cout<< ans<<endl;
+// 	cout<< ans<<endl;
 
-	return 0;
-}
+// 	return 0;
+// }
