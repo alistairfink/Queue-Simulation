@@ -1,8 +1,12 @@
-#include <math.c>
+#include <math.h>
 #include<cstdlib>
+#include<iostream>
+#include"lamdaFunct.h"
+
+using namespace std;
 
 float x_func(float u, float lamda){
-	float k = -1.0/lambda;
+	float k = -1.0/lamda;
 	return k*log(1-u);
 }
 
@@ -17,7 +21,6 @@ int main(){
 	ans = x_func(x,lamda);
 
 	cout<< ans<<endl;
-
 
 	return 0;
 }
