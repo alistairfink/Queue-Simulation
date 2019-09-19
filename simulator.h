@@ -5,9 +5,10 @@
 #include <cstdlib>
 #include <vector>
 
+using namespace std;
 /*Event Struct and Functions*/
 
-struct event{
+ struct Event{
 	float len;
 	float time;
 	char type;
@@ -36,15 +37,15 @@ struct result_parameters {
 };
 
 
-struct event init_event(char type, float time, int len){};
+Event init_event(char type, float time, int len);
 
 void print_event(struct Event E);
 
 void print_event_list(vector<Event> vect);
 
 //DES Functions
- struct event observers(int alpha, int duration );
- void event arrivals(float , int , int );
+Event observers(int alpha, int duration );
+Event arrivals(float , int , int );
  
 
 #endif
