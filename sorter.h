@@ -9,6 +9,6 @@
 
 using namespace std;
 
-vector<event> sort_times(vector<float> arrival, vector<float> departure, vector<float> observer);
+vector<Event> sort_times(vector<float> arrival, vector<float> length, vector<float> departure, vector<float> observer);
 
 #endif

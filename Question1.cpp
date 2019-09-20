@@ -9,7 +9,7 @@ using namespace std;
 
 int main() {
     // Generate values and print them.
-    vector<float> result = generator(75, 1000);
+    vector<float> result = generator(600, 1000);
     float total = 0;
     for(std::size_t i=0; i<result.size(); ++i) {
         cout << result[i] << endl;
