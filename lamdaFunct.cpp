@@ -12,7 +12,6 @@ using namespace std;
 float x_func(float u, float lamda){
 	// Compute the Inverse of the exponential cumulatice distribution
 	float k = -1.0/lamda;
-    cout << k << endl;
 	return k*log(1-u);
 }
 

@@ -1,0 +1,2 @@
+all:
+	g++ Question1.cpp lamdaFunct.cpp -o Question1
