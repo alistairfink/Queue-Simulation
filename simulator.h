@@ -14,6 +14,12 @@ using namespace std;
 	char type;
 };
 
+struct Packet {
+	float len;
+	float time;
+	float departure_time;
+};
+
 struct result_parameters {
 	//Average:
 	float lambda;	// packets generated

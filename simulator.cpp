@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <vector>
+#include <queue>
 #include <time.h>
 
 #include "lamdaFunct.h"
@@ -140,6 +141,52 @@ struct result_parameters simulate(int T, int k, int L, int C, float p ) {
 	printf("TOTAL TIME: %f seconds\n", total_time);
 
 	return test_result;
+}
+
+result_parameters simulate_finite_buffer(vector<Event> events, int buffer_size, int transmission_rate) {
+	std::queue<Packet> buffer;
+	std::size_t i = 0;
+	transmission_rate *= 1000000;
+
+	int packets_in_queue = 0;
+	int num_arrivals = 0;
+	int num_departures = 0;
+	int num_observations = 0;
+	int num_dropped = 0;
+	while( i < events.size()) {
+		if(events[i].time < buffer.front().departure_time) {
+			if(events[i].type == 'a') {
+				// Service Time?
+				num_arrivals++;
+				if(buffer.size() == buffer_size) {
+					num_dropped++;
+				} else {
+					Packet new_packet = {
+						events[i].len,
+						events[i].time,
+						0
+        			};
+
+        			if(buffer.empty()) {
+        				new_packet.departure_time = events[i].time + events[i].len / transmission_rate;
+        			} else {
+        				new_packet.departure_time = buffer.back().departure_time + events[i].len / transmission_rate;
+        			}
+				}
+			} else {
+				num_observations++;
+				// pidle and ploss?
+				packets_in_queue += buffer.size();
+			}
+
+			i++;
+		} else {
+			num_departures++;
+			buffer.pop();
+		}
+	}
+
+	return result_parameters{};
 }
 
 int main()
