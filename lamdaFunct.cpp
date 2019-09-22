@@ -40,7 +40,7 @@ vector<float> generator_timed(float lambda, float total_time) {
         float rndNum = rand() / ((double) RAND_MAX);
         float num = x_func(rndNum, lambda);
         curr_time += num;
-        result.push_back(num);
+        result.push_back(curr_time);
     }
 
     return result;
