@@ -38,6 +38,11 @@ vector<float> generator_timed(float lambda, float total_time) {
     while(curr_time <= total_time) {
 		// Generate random number and pass that and lambda into x_func to get x. Push x to vector.
         float rndNum = rand() / ((double) RAND_MAX);
+        // If rndNum is 1 then regenerate otherwise will get a domain error in the log function.
+        while(rndNum == 1) {
+            rndNum = rand() / ((double) RAND_MAX);
+        }
+
         float num = x_func(rndNum, lambda);
         curr_time += num;
         result.push_back(curr_time);

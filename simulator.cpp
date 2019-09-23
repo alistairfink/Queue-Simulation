@@ -216,7 +216,7 @@ result_parameters simulate_finite_buffer(vector<Event> events, int buffer_size, 
 
 	// Initialize result structure and do all the calculations then return.
 	result_parameters results = {};
-	// float avg_packets;
+	results.avg_packets = float(packets_in_queue)/float(num_observations);
 	// p_loss is ratio of dropped to toal number of arrivals/packets.
 	results.p_loss = float(num_dropped)/float(num_arrivals);
 	// p_idle is ratio of time queue was idle.

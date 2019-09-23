@@ -38,9 +38,9 @@ int main() {
         std::vector<float> empty_vector;
         vector<Event> sorted_times = sort_times(arrival, length, empty_vector, observer);
 
-        result_parameters results = simulate_finite_buffer(sorted_times, 10, 1);
+        result_parameters results = simulate_finite_buffer(sorted_times, queue_length, 1);
 
-        cout << "------------------------------------" << endl <<
+        cout << "------------------------------------" << endl << 
             "P Loss: " << results.p_loss << endl <<
             "P Idle: " << results.p_idle << endl <<
             "Average Packets in Queue: " << results.avg_packets << endl << 
