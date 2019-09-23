@@ -9,20 +9,20 @@
 
 using namespace std;
 
-vector<event> sort_times(vector<float> arrival, vector<float> departure, vector<float> observer) {
+vector<Event> sort_times(vector<float> arrival, vector<float> length, vector<float> departure, vector<float> observer) {
     std::size_t arrival_counter = 0;
     std::size_t departure_counter = 0;
     std::size_t observer_counter = 0;
 
-    vector<event> result;
+    vector<Event> result;
     // Keep looping until no more events 
     while(arrival_counter < arrival.size() || departure_counter < departure.size() || observer_counter < observer.size()) {
         if(arrival_counter < arrival.size() && 
             (departure_counter >= departure.size() || arrival[arrival_counter] <= departure[departure_counter]) &&
             (observer_counter >= observer.size() || arrival[arrival_counter] <= observer[observer_counter])) {
             // If arrival is lowest then add arrival to result
-            event arrival_event = {
-                0,
+            Event arrival_event = {
+                length[arrival_counter],
                 arrival[arrival_counter],
                 'a'
             };
@@ -32,7 +32,7 @@ vector<event> sort_times(vector<float> arrival, vector<float> departure, vector<
             (arrival_counter >= arrival.size() || departure[departure_counter] <= arrival[arrival_counter]) &&
             (observer_counter >= observer.size() || departure[departure_counter] <= observer[observer_counter])) {
             // If departure is lowest then add departure to result
-            event departure_event = {
+            Event departure_event = {
                 0,
                 departure[departure_counter],
                 'd'
@@ -41,7 +41,7 @@ vector<event> sort_times(vector<float> arrival, vector<float> departure, vector<
             departure_counter++;
         } else {
             // If neither arrival or departure is lowest then it has to be observer
-            event observer_event = {
+            Event observer_event = {
                 0,
                 observer[observer_counter],
                 'o'

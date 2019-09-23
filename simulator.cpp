@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include <vector>
+#include <queue>
 #include <time.h>
 
 #include "lamdaFunct.h"
@@ -155,6 +156,92 @@ struct result_parameters simulate(vector<Event> vect, int C) {
 	test_result.roh = roh;
 
 	return test_result;
+}
+
+result_parameters simulate_finite_buffer(vector<Event> events, int buffer_size, int transmission_rate) {
+	// Initialize buffer and itterator.
+	std::queue<Packet> buffer;
+	std::size_t i = 0;
+
+	// Multiply transmission rate out so I'm comparing bits to bits vs bits to mbits.
+	transmission_rate *= 1000000;
+
+	// Initialize counters and stats
+	int packets_in_queue = 0;
+	int num_arrivals = 0;
+	int num_departures = 0;
+	int num_observations = 0;
+	int num_dropped = 0;
+
+	float prev_time = 0;
+	float idle_time = 0;
+
+	// Start simulation
+	while(!buffer.empty() || i < events.size()) {
+		// If next closest event is in events vector then process that. Else departure is closest to current time so process that.
+		if(i < events.size() && (buffer.empty() || events[i].time < buffer.front().departure_time)) {
+			// Arrivals and Observations are handled differently.
+			if(events[i].type == 'a') {
+				// Increment Arrival Counter
+				num_arrivals++;
+
+				// If buffer is full then drop the packet.
+				if(buffer.size() == buffer_size) {
+					num_dropped++;
+				} else {
+					// Create new packet and calculate the departure time then add to queue.
+					Packet new_packet = {
+						events[i].len,
+						events[i].time,
+						0
+        			};
+
+        			// If the buffer is empty then departure time is calculated based on the packet length else 
+        			// need to factor in based on the departure time of the packet at the back of the buffer.
+        			if(buffer.empty()) {
+        				new_packet.departure_time = events[i].time + events[i].len / transmission_rate;
+        			} else {
+        				new_packet.departure_time = buffer.back().departure_time + events[i].len / transmission_rate;
+        			}
+
+        			buffer.push(new_packet);
+				}
+			} else {
+				// Increment observations counter and 
+				num_observations++;
+				// If buffer is empty then record the time since the previous event and add to idle time.
+				if(buffer.empty()) {
+					idle_time += events[i].time - prev_time;
+				}
+
+				// Average number of packets in buffer????????????????????????????????????
+				packets_in_queue += buffer.size();
+			}
+
+			// prev_time is the current time then itterate the event itterator
+			prev_time = events[i].time;
+			i++;
+		} else {
+			// Pop packet off queue and increment departure counter.
+			num_departures++;
+			prev_time = buffer.front().departure_time;
+			buffer.pop();
+		}
+	}
+
+	// Initialize result structure and do all the calculations then return.
+	result_parameters results = {};
+	results.avg_packets = float(packets_in_queue)/float(num_observations);
+	// p_loss is ratio of dropped to toal number of arrivals/packets.
+	results.p_loss = float(num_dropped)/float(num_arrivals);
+	// p_idle is ratio of time queue was idle.
+	results.p_idle = idle_time/prev_time;
+	results.packet_arrivals = num_arrivals;
+	results.packet_departures = num_departures;
+	results.packet_observers = num_observations;
+	// prev_time of last event so total time elapsed.
+	results.total_time = prev_time;
+	return results;
 }
 
 int main()

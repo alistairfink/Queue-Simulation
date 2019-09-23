@@ -14,6 +14,12 @@ using namespace std;
 	char type;
 };
 
+struct Packet {
+	float len;
+	float time;
+	float departure_time;
+};
+
 struct result_parameters {
 	//Average:
 	float lambda;	// packets generated
@@ -49,5 +55,6 @@ void print_event_list(vector<Event> vect);
 Event observers(int alpha, int duration );
 Event arrivals(float , int , int );
  
+result_parameters simulate_finite_buffer(vector<Event> events, int buffer_size, int transmission_rate);
 
 #endif
