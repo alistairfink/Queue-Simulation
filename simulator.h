@@ -29,6 +29,8 @@ struct result_parameters {
 	//number of packet arrivals, packet departures, observers
 	int packet_arrivals, packet_departures, packet_observers; 
 	
+	vector<float> service_time_vect;
+
 	double total_time;
 	
 	int duration;    

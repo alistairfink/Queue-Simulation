@@ -10,8 +10,6 @@
 
 using namespace std;
 
-struct result_parameters test_result;
-
 // Event Struct and Functions
  Event init_event(char type, float time, int len){
 	
@@ -94,21 +92,49 @@ void print_event_list(vector<Event> vect){
 	}
 }
 
-struct result_parameters simulate(int T, int k, int L, int C, float p ) {
+struct result_parameters simulate(vector<Event> vect, int C) {
 
-	clock_t s_start, s_end;
-	s_start = clock();
+	//Initiate counters
+	struct result_parameters test_result;
+	int arrivals_counter = 0; 
+	int observer_counter = 0;
+	int departure_counter = 0;
+	int curr_service_time=0;
+	int last_arrival_time = 0;
+
+	// Run the simulator
+	for (int i = 0; i < vect.size; i++) {
+
+		//Arrival Event
+		if (vect[i].type == 'a') {
+			arrivals_counter++;
+			last_arrival_time = vect[i].time;
+		}
+		//Observer Event
+		else if (vect[i].type == 'o') {
+			observer_counter++;
+		}
+		//Departure Event
+		else if (vect[i].type == 'd') {
+			departure_counter++;
+			curr_service_time = (vect[i].len / C)+ last_arrival_time;
+			test_result.service_time_vect.push_back(curr_service_time);
+		}
+		else {
+			cout << "invalid Event Type" << endl;
+		}
+	}
 	
-	srand(time(0));
+	test_result.packet_arrivals = arrivals_counter;
+	test_result.packet_observers = observer_counter;
+	test_result.packet_departures = departure_counter;
 
+	//calculate departure time  lengBits/tranmission rate+arrival time
 	int simulation_time = T; 		
-	int buffer_size = k;
 	int transmission_rate = C;
 	float roh = p;	  		
 	int len_packet = L;
 	
-	double total_time;
-
 	float lambda = (roh / len_packet) * transmission_rate; 
 	float alpha = lambda + 5;
 
@@ -127,17 +153,6 @@ struct result_parameters simulate(int T, int k, int L, int C, float p ) {
 	test_result.link_rate = transmission_rate;
 	test_result.size_buffer = buffer_size;
 	test_result.roh = roh;
-
-	// Run the simulator
-	observers(alpha, simulation_time);
-	arrivals(lambda, simulation_time, len_packet);
-	
-	
-	s_end = clock();
-	total_time = ((double) (s_end-s_start));
-	test_result.total_time = total_time;
-
-	printf("TOTAL TIME: %f seconds\n", total_time);
 
 	return test_result;
 }
