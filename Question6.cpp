@@ -13,8 +13,9 @@
 using namespace std;
 
 void user_input();
-void run_simulation(float queue_utilization, int queue_length);
+void run_simulation(float queue_utilization, int queue_length, int simulation_time);
 void run_test_cases();
+void run_stability_test();
 
 int main() {
     // Ask user if they want to run the defaults.
@@ -24,7 +25,13 @@ int main() {
     if(response == 'y') {
         run_test_cases();
     } else {
-        user_input();
+        cout << "Run Stability Test?(y/n) ";
+        cin >> response;
+        if (response == 'y') {
+            run_stability_test();
+        } else {
+            user_input();
+        }
     }
 
     return -1;
@@ -40,9 +47,16 @@ void run_test_cases() {
     for (int i = 0; i < sizeof(buffer_lengths)/sizeof(buffer_lengths[0]); ++i) {
         for (int j = 0; j < sizeof(queue_utilizations)/sizeof(queue_utilizations[0]); ++j) {
             // Loop through combinations and run sim for each.
-            run_simulation(queue_utilizations[j], buffer_lengths[i]);
+            run_simulation(queue_utilizations[j], buffer_lengths[i], 1000);
         }
     }
+}
+
+void run_stability_test() {
+    // Print headers at the top of all the results in csv format
+    cout << "Queue Utilization, Buffer Length, P_Loss, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
+    run_simulation(3.6, 25, 1000);
+    run_simulation(3.6, 25, 2000);
 }
 
 void user_input() {
@@ -57,13 +71,13 @@ void user_input() {
 
         // Print headers for csv format and run sim
         cout << "Queue Utilization, Buffer Length, P_Loss, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
-        run_simulation(queue_utilization, queue_length);
+        run_simulation(queue_utilization, queue_length, 1000);
+        run_simulation(queue_utilization, queue_length, 2000);
     }
 }
 
-void run_simulation(float queue_utilization, int queue_length) {
+void run_simulation(float queue_utilization, int queue_length, int simulation_time) {
     // Generation Params
-    int simulation_time = 1000;
     int average_length = 2000;
 
     // Calculate lambda. queue_utilization*transmission_rate(1mbps)/average_length
