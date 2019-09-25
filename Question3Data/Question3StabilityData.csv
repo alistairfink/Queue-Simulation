@@ -1,3 +1,3 @@
-Queue Utilization, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time
-0.5, 0.419993, 0.967715, 24919, 24919, 124454, 100.005
-0.5, 0.419882, 0.99123, 49818, 49818, 249956, 200.003
+Run Stability Test?(y/n) Queue Utilization, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time
+0.5, 0.414875, 0.990372, 250017, 250017, 1248278, 1000
+0.5, 0.413879, 0.994735, 498164, 498164, 2500165, 2000

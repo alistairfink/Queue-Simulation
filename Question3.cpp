@@ -52,8 +52,8 @@ void run_test_cases() {
 void run_stability_test() {
     // Print headers at the top of all the results in csv format
     cout << "Queue Utilization, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
-    run_simulation(0.5, 100);
-    run_simulation(0.5, 200);
+    run_simulation(0.5, 1000);
+    run_simulation(0.5, 2000);
 }
 
 void user_input() {
