@@ -44,7 +44,7 @@ void run_test_cases() {
     // Print headers at the top of all the results in csv format
     cout << "Queue Utilization, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
     for (int j = 0; j < sizeof(queue_utilizations)/sizeof(queue_utilizations[0]); ++j) {
-        // Loop through combinations and run sim for each.
+        // Loop through rhos and run sim for each.
         run_simulation(queue_utilizations[j], 1000);
     }
 }
@@ -58,7 +58,7 @@ void run_stability_test() {
 
 void user_input() {
     for(;;) {
-        // Prompt user for queue utilization and length
+        // Prompt user for queue utilization
         cout << "Queue Utilization: ";
         float queue_utilization;
         cin >> queue_utilization;
@@ -85,7 +85,7 @@ void run_simulation(float queue_utilization, int simulation_time) {
     vector<float> observer = generator_timed(5*lambda, simulation_time);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    // Empty vector since we don't use departure events for finite queue and sort by time
+    // Sort by time
     vector<Event> sorted_times = sort_times(arrival, length, departure, observer);
 
     // Run sim
