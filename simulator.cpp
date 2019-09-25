@@ -11,88 +11,6 @@
 
 using namespace std;
 
-// Event Struct and Functions
-//  Event init_event(char type, float time, int len){
-	
-// 	  Event event;
-// 	  float lambda = 1.0/len;
-// 	  vector<float> tmp = generator(lambda,1);
-	
-// 		if (type == 'a')
-// 		{			
-// 			event.len = tmp.pop_back();
-// 		}
-// 		else
-// 		{
-// 			event.len = len;
-// 		}
-// 		event.time = time;
-// 		event.type = type;
-		
-// 		return event;
-// }
-
-
-// void print_event(struct Event E){
-//  	cout << "\n Event Type : " << E.type << "\n Event Time : " << E.time << "\n Event Length: %f " << E.len << endl;
-// }
-
-// void print_event_list(vector<Event> vect){
-    
-// 	if(vect.empty())
-//         cout << "No events in the Queue.\n";
-//     else{
-//     		for (int i = 0; i < vect.size(); i++)                          
-// 	            {
-// 	                cout << "\n Event Type : " << vect[i].type << "\n Event Time : " << vect[i].time << "\n Event Length: %f " << vect[i].len;
-// 				}
-// 	}  
-// }
- 
-// 	//Discrete Event Simulation Functions
- 
-//  Event observers(int alpha, int duration)
-// {
-//  	Event e;
-// 	float curr_time=0;
-//  	float tmp_time;
-
-// 	while (curr_time <= duration) {
-		
-// 		vector<float> tmp;
-// 		tmp = generator(alpha,1);
-// 		float gen_time = tmp.pop_back();
-// 		curr_time += gen_time; 
-		
-// 		if (curr_time > duration) {
-// 			break;
-// 		}
-
-// 		e = init_event('O', curr_time, 0);
-// 		return e;
-// 	}
-
-// }
-
-//   Event arrivals(float lambda , int len_packet, int duration ){
-//  	float curr_time = 0;
-// 	Event e;
-
-// 	while (curr_time <= duration) {
-// 		vector<float> tmp;
-// 		tmp= generator(lambda,1);
-// 		float gen_time = tmp.push_back();
-// 		curr_time += gen_time;
-	
-// 		if (curr_time > duration) {
-// 			break;
-// 		}
-
-// 		e = init_event('A', curr_time, len_packet);
-// 		return e;
-// 	}
-// }
-
 result_parameters simulate(vector<Event> vect, int C) {
 	//Initiate counters
 	result_parameters test_result;
@@ -107,19 +25,21 @@ result_parameters simulate(vector<Event> vect, int C) {
 	float prev_event = 0.0;
 
 	std::queue<Packet> buffer;
-	// Run the simulator
 	int i = 0;
 
 	// Multiply transmission rate out so I'm comparing bits to bits vs bits to mbits.
 	int transmission_rate = C*1000000;
 
+	// Run the simulator
 	while(!buffer.empty() || i < vect.size()) {
+		// If next event to process is in vect then process that otherwise process the front of the queue.
 		if(i < vect.size() && (buffer.empty() || vect[i].time < buffer.front().departure_time)) {
 			//Arrival Event
 			if (vect[i].type == 'a') {
+				// Itterate arrival counter
 				arrivals_counter++;
-				last_arrival_time = vect[i].time;
 
+				// Instantiate new packet to be pushed into buffer.
 				Packet new_packet = {
 					vect[i].len,
 					vect[i].time,
@@ -138,8 +58,13 @@ result_parameters simulate(vector<Event> vect, int C) {
 			}
 			//Observer Event
 			else if (vect[i].type == 'o') {
+				// Itterate observer counter
 				observer_counter++;
+
+				// Add number of packets for avg packets calculation later.
 				packets_in_buffer += buffer.size();
+
+				// If no packets in buffer then get time since last event and add that time to total idle time for later percentage idle time calc.
 				if(buffer.size() == 0) {
 					idle_time += vect[i].time - prev_event;
 				}
@@ -158,28 +83,17 @@ result_parameters simulate(vector<Event> vect, int C) {
 		}
 	}
 	
+	// Input metrics into results struct
 	test_result.packet_arrivals = arrivals_counter;
 	test_result.packet_observers = observer_counter;
 	test_result.packet_departures = departure_counter;
 
-	//calculate departure time  lengBits/tranmission rate+arrival time
-	// int simulation_time = T;
-	// float roh = p;	  		
-	// int len_packet = L;
-	
-	// float lambda = (roh / len_packet) * transmission_rate; 
-	// float alpha = lambda + 5;
-
-	// test_result.duration = T;
-	// test_result.alpha = alpha;
-	// test_result.lambda = lambda;
-	// test_result.len_packet = len_packet;
 	test_result.link_rate = transmission_rate;
+	// Avg Packets in buffer is sum of packets in buffer at each observation event / number of observation events.
 	test_result.avg_packets = packets_in_buffer / float(observer_counter);
+	// Idle time is percentage of total time that the system was idle.
 	test_result.p_idle = idle_time / prev_event;
 	test_result.total_time = prev_event;
-	// test_result.size_buffer = buffer_size;
-	// test_result.roh = roh;
 
 	return test_result;
 }
@@ -269,13 +183,3 @@ result_parameters simulate_finite_buffer(vector<Event> events, int buffer_size, 
 	results.total_time = prev_time;
 	return results;
 }
-
-// int main()
-// {
-	
-// 	Event t_event;
-// 	t_event = init_event('A',5,10);
-// 	print_event(t_event);
-// 	cout<<"test";
-// 	return 0;
-// }

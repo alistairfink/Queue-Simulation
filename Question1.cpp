@@ -16,9 +16,11 @@ int main() {
 		total += result[i];
 	}
 
+	// Calculate mean of generated values.
 	float mean = total / 1000.0;
 	cout << "Mean: " << mean << endl;
 
+	// Calculate variance based on mean.
 	float variance = 0;
 	for (std::size_t i = 0; i < result.size(); ++i) {
 		variance += (result[i] - mean)*(result[i] - mean);

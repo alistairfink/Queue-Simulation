@@ -22,7 +22,6 @@ vector<float> generator(float lambda, int events) {
 		// Generate random number and pass that and lambda into x_func to get x. Push x to vector.
         float rndNum = rand() / ((double) RAND_MAX);
         float num = x_func(rndNum, lambda);
-        // Add inter arrival time to total
         result.push_back(num);
     }
 

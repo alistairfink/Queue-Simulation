@@ -53,7 +53,7 @@ void run_test_cases() {
 }
 
 void run_stability_test() {
-    // Print headers at the top of all the results in csv format
+    // Print headers at the top of all the results in csv format then run sim for 1000 and 2000 seconds.
     cout << "Queue Utilization, Buffer Length, P_Loss, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
     run_simulation(3.6, 25, 1000);
     run_simulation(3.6, 25, 2000);

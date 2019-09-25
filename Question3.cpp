@@ -50,7 +50,7 @@ void run_test_cases() {
 }
 
 void run_stability_test() {
-    // Print headers at the top of all the results in csv format
+    // Print headers at the top of all the results in csv format then run sim for 1000 and 2000 seconds.
     cout << "Queue Utilization, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
     run_simulation(0.5, 1000);
     run_simulation(0.5, 2000);
@@ -83,7 +83,7 @@ void run_simulation(float queue_utilization, int simulation_time) {
     vector<float> observer = generator_timed(5*lambda, simulation_time);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    // Empty vector since we don't use departure events anymore and sort by time
+    // Empty vector since we don't use departure events anymore and sort by time. Used to do departures too but changed this and didn't change the sorter.
     std::vector<float> empty_vector;
     vector<Event> sorted_times = sort_times(arrival, length, empty_vector, observer);
 
