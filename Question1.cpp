@@ -25,5 +25,5 @@ int main() {
 	}
 
     cout << "Variance: " << variance/1000 << endl;
-    return -1;
+    return 0;
 }

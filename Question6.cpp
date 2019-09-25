@@ -34,7 +34,7 @@ int main() {
         }
     }
 
-    return -1;
+    return 0;
 }
 
 void run_test_cases() {
