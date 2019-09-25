@@ -52,8 +52,8 @@ void run_test_cases() {
 void run_stability_test() {
     // Print headers at the top of all the results in csv format
     cout << "Queue Utilization, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
-    run_simulation(0.5, 1000);
-    run_simulation(0.5, 2000);
+    run_simulation(0.5, 100);
+    run_simulation(0.5, 200);
 }
 
 void user_input() {
@@ -80,13 +80,12 @@ void run_simulation(float queue_utilization, int simulation_time) {
     std::this_thread::sleep_for(std::chrono::seconds(1));
     vector<float> length = generator_lengths(1.0/average_length, arrival.size());
     std::this_thread::sleep_for(std::chrono::seconds(1));
-    vector<float> departure = generator_timed(lambda, simulation_time);
-    std::this_thread::sleep_for(std::chrono::seconds(1));
     vector<float> observer = generator_timed(5*lambda, simulation_time);
     std::this_thread::sleep_for(std::chrono::seconds(1));
 
-    // Sort by time
-    vector<Event> sorted_times = sort_times(arrival, length, departure, observer);
+    // Empty vector since we don't use departure events anymore and sort by time
+    std::vector<float> empty_vector;
+    vector<Event> sorted_times = sort_times(arrival, length, empty_vector, observer);
 
     // Run sim
     result_parameters results = simulate(sorted_times, 1);

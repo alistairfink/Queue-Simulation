@@ -102,40 +102,60 @@ result_parameters simulate(vector<Event> vect, int C) {
 	int curr_service_time=0;
 	int last_arrival_time = 0;
 
-	int packets_in_buffer = 0;
+	unsigned long long int packets_in_buffer = 0;
 	float idle_time = 0.0;
 	float prev_event = 0.0;
-	int buffer = 0;
-	// Run the simulator
-	for (std::size_t i = 0; i < vect.size(); i++) {
-		//Arrival Event
-		if (vect[i].type == 'a') {
-			arrivals_counter++;
-			buffer++;
-			last_arrival_time = vect[i].time;
-		}
-		//Observer Event
-		else if (vect[i].type == 'o') {
-			observer_counter++;
-			packets_in_buffer += buffer;
-			if(buffer == 0) {
-				idle_time += vect[i].time - prev_event;
-			}
-		}
-		//Departure Event
-		else if (vect[i].type == 'd') {
-			if(buffer > 0) {
-				departure_counter++;
-				curr_service_time = (vect[i].len / C)+ last_arrival_time;
-				test_result.service_time_vect.push_back(curr_service_time);
-				buffer--;
-			}
-		}
-		else {
-			cout << "invalid Event Type" << endl;
-		}
 
-		prev_event = vect[i].time;
+	std::queue<Packet> buffer;
+	// Run the simulator
+	int i = 0;
+
+	// Multiply transmission rate out so I'm comparing bits to bits vs bits to mbits.
+	int transmission_rate = C*1000000;
+
+	while(!buffer.empty() || i < vect.size()) {
+		if(i < vect.size() && (buffer.empty() || vect[i].time < buffer.front().departure_time)) {
+			//Arrival Event
+			if (vect[i].type == 'a') {
+				arrivals_counter++;
+				last_arrival_time = vect[i].time;
+
+				Packet new_packet = {
+					vect[i].len,
+					vect[i].time,
+					0
+    			};
+
+    			// If the buffer is empty then departure time is calculated based on the packet length else 
+    			// need to factor in based on the departure time of the packet at the back of the buffer.
+    			if(buffer.empty()) {
+    				new_packet.departure_time = vect[i].time + vect[i].len / transmission_rate;
+    			} else {
+    				new_packet.departure_time = buffer.back().departure_time + vect[i].len / transmission_rate;
+    			}
+
+    			buffer.push(new_packet);
+			}
+			//Observer Event
+			else if (vect[i].type == 'o') {
+				observer_counter++;
+				packets_in_buffer += buffer.size();
+				if(buffer.size() == 0) {
+					idle_time += vect[i].time - prev_event;
+				}
+			}
+			else {
+				cout << "invalid Event Type" << endl;
+			}
+
+			prev_event = vect[i].time;
+			i++;
+		} else {
+			// Pop packet off queue and increment departure counter.
+			departure_counter++;
+			prev_event = buffer.front().departure_time;
+			buffer.pop();
+		}
 	}
 	
 	test_result.packet_arrivals = arrivals_counter;
@@ -143,8 +163,7 @@ result_parameters simulate(vector<Event> vect, int C) {
 	test_result.packet_departures = departure_counter;
 
 	//calculate departure time  lengBits/tranmission rate+arrival time
-	// int simulation_time = T; 		
-	int transmission_rate = C;
+	// int simulation_time = T;
 	// float roh = p;	  		
 	// int len_packet = L;
 	
@@ -156,7 +175,7 @@ result_parameters simulate(vector<Event> vect, int C) {
 	// test_result.lambda = lambda;
 	// test_result.len_packet = len_packet;
 	test_result.link_rate = transmission_rate;
-	test_result.avg_packets = float(packets_in_buffer) / float(observer_counter);
+	test_result.avg_packets = packets_in_buffer / float(observer_counter);
 	test_result.p_idle = idle_time / prev_event;
 	test_result.total_time = prev_event;
 	// test_result.size_buffer = buffer_size;
