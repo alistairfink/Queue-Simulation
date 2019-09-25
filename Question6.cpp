@@ -72,7 +72,6 @@ void user_input() {
         // Print headers for csv format and run sim
         cout << "Queue Utilization, Buffer Length, P_Loss, P_Idle, Average Packets in Queue, Arrivals, Departures, Observations, Total Time" << endl;
         run_simulation(queue_utilization, queue_length, 1000);
-        run_simulation(queue_utilization, queue_length, 2000);
     }
 }
 

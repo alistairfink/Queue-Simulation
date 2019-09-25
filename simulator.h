@@ -55,6 +55,7 @@ void print_event_list(vector<Event> vect);
 Event observers(int alpha, int duration );
 Event arrivals(float , int , int );
  
+result_parameters simulate(vector<Event> vect, int C);
 result_parameters simulate_finite_buffer(vector<Event> events, int buffer_size, int transmission_rate);
 
 #endif

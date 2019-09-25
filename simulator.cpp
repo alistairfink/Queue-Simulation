@@ -93,10 +93,9 @@ using namespace std;
 // 	}
 // }
 
-struct result_parameters simulate(vector<Event> vect, int C) {
-
+result_parameters simulate(vector<Event> vect, int C) {
 	//Initiate counters
-	struct result_parameters test_result;
+	result_parameters test_result;
 	int arrivals_counter = 0; 
 	int observer_counter = 0;
 	int departure_counter = 0;
@@ -106,27 +105,31 @@ struct result_parameters simulate(vector<Event> vect, int C) {
 	int packets_in_buffer = 0;
 	float idle_time = 0.0;
 	float prev_event = 0.0;
+	int buffer = 0;
 	// Run the simulator
-	for (int i = 0; i < vect.size(); i++) {
-
+	for (std::size_t i = 0; i < vect.size(); i++) {
 		//Arrival Event
 		if (vect[i].type == 'a') {
 			arrivals_counter++;
+			buffer++;
 			last_arrival_time = vect[i].time;
 		}
 		//Observer Event
 		else if (vect[i].type == 'o') {
 			observer_counter++;
-			packets_in_buffer += arrivals_counter - departure_counter;
-			if(arrivals_counter == departure_counter) {
+			packets_in_buffer += buffer;
+			if(buffer == 0) {
 				idle_time += vect[i].time - prev_event;
 			}
 		}
 		//Departure Event
 		else if (vect[i].type == 'd') {
-			departure_counter++;
-			curr_service_time = (vect[i].len / C)+ last_arrival_time;
-			test_result.service_time_vect.push_back(curr_service_time);
+			if(buffer > 0) {
+				departure_counter++;
+				curr_service_time = (vect[i].len / C)+ last_arrival_time;
+				test_result.service_time_vect.push_back(curr_service_time);
+				buffer--;
+			}
 		}
 		else {
 			cout << "invalid Event Type" << endl;
@@ -155,6 +158,7 @@ struct result_parameters simulate(vector<Event> vect, int C) {
 	test_result.link_rate = transmission_rate;
 	test_result.avg_packets = float(packets_in_buffer) / float(observer_counter);
 	test_result.p_idle = idle_time / prev_event;
+	test_result.total_time = prev_event;
 	// test_result.size_buffer = buffer_size;
 	// test_result.roh = roh;
 
