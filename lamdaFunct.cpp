@@ -18,14 +18,12 @@ float x_func(float u, float lamda){
 vector<float> generator(float lambda, int events) {
     srand(time(0)); 
     vector<float> result;
-    float total_time = 0;
     for(int counter = 0; counter < events; counter++) {
 		// Generate random number and pass that and lambda into x_func to get x. Push x to vector.
         float rndNum = rand() / ((double) RAND_MAX);
         float num = x_func(rndNum, lambda);
         // Add inter arrival time to total
-        total_time += num;
-        result.push_back(total_time);
+        result.push_back(num);
     }
 
     return result;
